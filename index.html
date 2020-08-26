@@ -28,14 +28,24 @@
     <!--Aside-->
     <div class="container">
         <div class="row">
+            <!--Can click on city in search history-->
+            <!--When clicked, can AGAIN pull up Today's Forecast and 5 Day Forecast from search history-->
+            <!--Have search history persist. Make sure that when you close out, once you pull it back up the search history stays-->
             <div class="col-3" id="search"><h3>Search for a City</h3></div>
             <!--main-->
             <main class="col-9" id="weather">
-                <div class="row" id="today"><h3>Today's Forecast</h3></div>
+                <div class="row" id="today"><h3>Today's Forecast</h3>
+                    <div class="city"></div>
+                    <div class="temp"></div>
+                    <div class="humidity"></div>
+                    <div class="wind"></div>
+                    <div class="index"></div>
+                </div>
                 <div class="row" id="forecast">
                     <div class="col">
                         <div class="row"><h3>5 Day Forecast</h3></div>
                         <div class="row">
+                            <!--each card will have Date, Icon representation, Temperature, Humidity-->
                             <div class="col border border-dark">col</div>
                             <div class="col border border-dark">col</div>
                             <div class="col border border-dark">col</div>
@@ -49,7 +59,24 @@
     </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
+    //1. Search for a city
+          //Use Activity 9!
+    //2.Today's Forecast
+        var APIKey = "";
+        //need a var for the city chosen
+        var queryURL = "" + "" + APIKey;
+        //need a var for today's date
+        //Temperature IN FARENHEIT
 
+        //Transfering content to HTMl
+        $(".city").html("<h1>" + city + moment + icon);
+        $(".temp").text("Temperature(F):" + temperature);
+        $(".humidity").text("Humidity:" + humidity);
+        $(".wind").text("Wind Speed:" + wind);
+        $(".index").text("UV Index:" + index);
+        //UV Index number is in a color that indicates whether it is favorable, moderate or severe
+
+    //3. Five Day Forecast
 </script>
 </body>
 </html>
