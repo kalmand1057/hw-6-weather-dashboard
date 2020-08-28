@@ -31,7 +31,15 @@
             <!--Can click on city in search history-->
             <!--When clicked, can AGAIN pull up Today's Forecast and 5 Day Forecast from search history-->
             <!--Have search history persist. Make sure that when you close out, once you pull it back up the search history stays-->
-            <div class="col-3" id="search"><h3>Search for a City</h3></div>
+            <div class="col-3" id="search">
+                <h3>Search for a City</h3>
+                <form id="city-form">
+                    <label for="city-input"></label>
+                    <input type="text" id="city-input"><br>
+                    <!-- Button trigger -->
+                    <input id="add-movie" type="submit" value="Search">
+                </form>
+            </div>
             <!--main-->
             <main class="col-9" id="weather">
                 <div class="row" id="today"><h3>Today's Forecast</h3>
@@ -62,19 +70,48 @@
     //1. Search for a city
           //Use Activity 9!
     //2.Today's Forecast
-        var APIKey = "";
+        var APIKey = "166a433c57516f51dfab1f7edaed8413";
         //need a var for the city chosen
-        var queryURL = "" + "" + APIKey;
-        //need a var for today's date
-        //Temperature IN FARENHEIT
+        var queryURL = "https://api.openweathermap.org/data/2.5/weather?" + "q=Bujumbura,Burundi&appid=" + APIKey;
 
-        //Transfering content to HTMl
-        $(".city").html("<h1>" + city + moment + icon);
-        $(".temp").text("Temperature(F):" + temperature);
-        $(".humidity").text("Humidity:" + humidity);
-        $(".wind").text("Wind Speed:" + wind);
-        $(".index").text("UV Index:" + index);
-        //UV Index number is in a color that indicates whether it is favorable, moderate or severe
+        //need a var for today's date in city div
+
+        //need icon as well for city div
+
+        //run AJAX to call OpenWeatherMap API
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        })
+
+        //Store all retrieved data inside object called response
+
+        .then(function(respone) {
+            //Log the queryURL
+            console.log(queryURL);
+
+            //Log resulting object
+            console.log(respone);
+
+            //Transfering content to HTMl
+            $(".city").html("<h1>" + response.name + "Also need date" + response.icon);
+            $(".temp").text("Temperature(F):" + tempF.toFixed(2));
+            $(".humidity").text("Humidity:" + response.main.humidity);
+            $(".wind").text("Wind Speed:" + response.wind.speed);
+            //NEED TO GET UV INDEX
+
+            //Temperature IN FARENHEIT
+            var tempF = (response.main.temp - 273.15) * 1.80 + 32;
+            //maybe need to add temp content to html?
+
+            //Log the data in the console as well
+            console.log("Temperature (F):" + tempF);
+            console.log("Humidity:" + response.main.humidity);
+            console.log("Wind Speed:" + response.wind.speed);
+            //ALSO GET UV INDEX
+
+            //UV Index number is in a color that indicates whether it is favorable, moderate or severe
+        })
 
     //3. Five Day Forecast
 </script>
