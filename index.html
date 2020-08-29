@@ -83,6 +83,7 @@
         function displayCityInfo() {
             //var city = $(this).attr("data-name");
             var citySearchURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
+            //var weatherIconURL = "http://openweathermap.org/img/wn/" + 10d + "@2x.png";
 
             $.ajax({
                 url: citySearchURL,
@@ -104,17 +105,28 @@
                     $(".wind").text("Wind Speed: " + uvDataResponse.current.wind_speed + " MPH");
                     $(".index").text("UV Index: " + uvDataResponse.current.uvi);
                 });
-            });
 
-            var forecastURL = "";
+                //5 Day Forecast
+            var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
             $.ajax({
-                url: forecastURL,
-                method: "GET"
-            }).then(function(responseForecast) {
-                //iterate list.count
-                //create for loop by adding 
+                    url: forecastURL,
+                    method: "GET"
+                }).then(function(forecastResponse) {
+                    var results = forecastResponse.list;
+                    for (var i = 0; i < results.length; i) {
+                        console.log(results[i].main.humidity);
+                        i++;
+                        if (i == 5){
+                            break;
+                        }
+                    }
+                    //iterate list.count
+                    //create for loop by adding 
+                    //each forecast day needs DATE, ICON, TEMP, HUMIDITY
+                });
             });
 
+           
         }
 
         // Function for displaying movie data
