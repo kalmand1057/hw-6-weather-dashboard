@@ -37,81 +37,160 @@
                     <label for="city-input"></label>
                     <input type="text" id="city-input"><br>
                     <!-- Button trigger -->
-                    <input id="add-movie" type="submit" value="Search">
+                    <input id="add-city" type="submit" value="Search">
                 </form>
             </div>
             <!--main-->
             <main class="col-9" id="weather">
-                <div class="row" id="today"><h3>Today's Forecast</h3>
-                    <div class="city"></div>
-                    <div class="temp"></div>
-                    <div class="humidity"></div>
-                    <div class="wind"></div>
-                    <div class="index"></div>
+                <div class="row" id="today">
+                    <div class="col">
+                        <div class="city"></div>
+                        <div class="temp"></div>
+                        <div class="humidity"></div>
+                        <div class="wind"></div>
+                        <div class="index"></div>
+                    </div>
                 </div>
                 <div class="row" id="forecast">
                     <div class="col">
                         <div class="row"><h3>5 Day Forecast</h3></div>
                         <div class="row">
                             <!--each card will have Date, Icon representation, Temperature, Humidity-->
-                            <div class="col border border-dark">col</div>
-                            <div class="col border border-dark">col</div>
-                            <div class="col border border-dark">col</div>
-                            <div class="col border border-dark">col</div>
-                            <div class="col border border-dark">col</div>
+                            <div class="col border border-dark" id="0">col</div>
+                            <div class="col border border-dark" id="1">col</div>
+                            <div class="col border border-dark" id="2">col</div>
+                            <div class="col border border-dark" id="3">col</div>
+                            <div class="col border border-dark" id="4">col</div>
                     </div>
                     </div>
                 </div>
             </main>
         </div>
     </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script type="text/javascript">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
     //1. Search for a city
-          //Use Activity 9!
-    //2.Today's Forecast
+        //Use Activity 9!
         var APIKey = "166a433c57516f51dfab1f7edaed8413";
-        //need a var for the city chosen
-        var queryURL = "https://api.openweathermap.org/data/2.5/weather?" + "q=Bujumbura,Burundi&appid=" + APIKey;
+
+        var city = "";
+        var lat = "";
+        var lon = "";
+        var uvDataResponse = "";
+       
+
+        // Function for dumping the JSON content for each button into the div
+        function displayCityInfo() {
+            //var city = $(this).attr("data-name");
+            var citySearchURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
+
+            $.ajax({
+                url: citySearchURL,
+                method: "GET"
+            }).then(function(response) {
+                var latLonSearchURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&%20exclude=hourly,daily&appid=" + APIKey;
+                $.ajax({
+                    url: latLonSearchURL,
+                    method: "GET"
+                }).then(function(responseUvi) {
+                    uvDataResponse = responseUvi;
+                    // Temperature IN FARENHEIT
+                    var tempF = (uvDataResponse.current.temp - 273.15) * 1.80 + 32;
+           
+                    //Transfering content to HTMl
+                    $(".city").html("<h3>" + uvDataResponse.timezone + " (Also need date and icon)");
+                    $(".temp").text("Temperature(F): " + tempF);
+                    $(".humidity").text("Humidity: " + uvDataResponse.current.humidity + "%");
+                    $(".wind").text("Wind Speed: " + uvDataResponse.current.wind_speed + " MPH");
+                    $(".index").text("UV Index: " + uvDataResponse.current.uvi);
+                });
+            });
+
+            var forecastURL = "";
+            $.ajax({
+                url: forecastURL,
+                method: "GET"
+            }).then(function(responseForecast) {
+                //iterate list.count
+                //create for loop by adding 
+            });
+
+        }
+
+        // Function for displaying movie data
+        function renderButtons() {
+            // Deleting the buttons prior to adding new movies
+            // (this is necessary otherwise you will have repeat buttons)
+            $("#buttons-view").empty();
+
+            // Looping through the array of movies
+            for (var i = 0; i < movies.length; i++) {
+
+                // Then dynamically generating buttons for each movie in the array
+                // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+                var a = $("<button>");
+                // Adding a class of movie to our button
+                a.addClass("movie");
+                // Adding a data-attribute
+                a.attr("data-name", movies[i]);
+                // Providing the initial button text
+                a.text(movies[i]);
+                // Adding the button to the buttons-view div
+                $("#buttons-view").append(a);
+            }
+        }
+
+        // This function handles events where one button is clicked
+        $("#add-city").on("click", function(event) {
+            event.preventDefault();
+
+            // This line grabs the input from the textbox
+            city = $("#city-input").val().trim();
+
+            // Adding the movie from the textbox to our array
+               // movies.push(movie);
+               // console.log(movies);
+
+            // Calling renderButtons which handles the processing of our movie array
+                    //renderButtons();
+        });
+
+        // Function for displaying the movie info
+        // Using $(document).on instead of $(".movie").on to add event listeners to dynamically generated elements
+        $(document).on("click", "#add-city", displayCityInfo);
+
+    //2.Today's Forecast
 
         //need a var for today's date in city div
-
+        
         //need icon as well for city div
 
         //run AJAX to call OpenWeatherMap API
-        $.ajax({
-            url: queryURL,
-            method: "GET"
-        })
+    //     $.ajax({
+    //         url: queryURL,
+    //         method: "GET"
+    //     }).then(function(response) {
+    //        console.log(queryURL);
+    //        console.log(response);
 
-        //Store all retrieved data inside object called response
+    //        //Temperature IN FARENHEIT
+    //        var tempF = (response.current.temp - 273.15) * 1.80 + 32;
+           
+    //        //Transfering content to HTMl
+    //        $(".city").html("<h3>" + response.timezone + " (Also need date and icon)");
+    //        $(".temp").text("Temperature(F): " + tempF);
+    //        $(".humidity").text("Humidity: " + response.current.humidity + "%");
+    //        $(".wind").text("Wind Speed: " + response.current.wind_speed + " MPH");
+    //        $(".index").text("UV Index: " + response.current.wind_speed);
 
-        .then(function(respone) {
-            //Log the queryURL
-            console.log(queryURL);
+    //        //Logging the data in the console as well
+    //        console.log("Temperature (F):" + tempF);
+    //        console.log("Humidity: " + response.current.humidity);
+    //        console.log("Wind Speed: " + response.current.wind_speed);
+    //        console.log("UV Index: " + uvDataResponse);
 
-            //Log resulting object
-            console.log(respone);
-
-            //Transfering content to HTMl
-            $(".city").html("<h1>" + response.name + "Also need date" + response.icon);
-            $(".temp").text("Temperature(F):" + tempF.toFixed(2));
-            $(".humidity").text("Humidity:" + response.main.humidity);
-            $(".wind").text("Wind Speed:" + response.wind.speed);
-            //NEED TO GET UV INDEX
-
-            //Temperature IN FARENHEIT
-            var tempF = (response.main.temp - 273.15) * 1.80 + 32;
-            //maybe need to add temp content to html?
-
-            //Log the data in the console as well
-            console.log("Temperature (F):" + tempF);
-            console.log("Humidity:" + response.main.humidity);
-            console.log("Wind Speed:" + response.wind.speed);
-            //ALSO GET UV INDEX
-
-            //UV Index number is in a color that indicates whether it is favorable, moderate or severe
-        })
+    //        //UV Index number is in a color that indicates whether it is favorable, moderate or severe
+    //    })
 
     //3. Five Day Forecast
 </script>
