@@ -24,14 +24,14 @@
 
 <body>
     <!--Header-->
-    <header class="title"><h1>Weather Dashboard</h1></header>
+    <header class="title"><h1><img src="http://openweathermap.org/img/wn/02d@2x.png">Weather Dashboard</h1></header>
     <!--Aside-->
     <div class="container">
         <div class="row">
             <!--Can click on city in search history-->
             <!--When clicked, can AGAIN pull up Today's Forecast and 5 Day Forecast from search history-->
             <!--Have search history persist. Make sure that when you close out, once you pull it back up the search history stays-->
-            <div class="col-2" id="search">
+            <div class="col-3" id="search">
                 <h3>Search for a City</h3>
                 <form id="city-form">
                     <label for="city-input"></label>
@@ -41,10 +41,10 @@
                 </form>
             </div>
             <!--main-->
-            <main class="col-10" id="weather">
+            <main class="col-9" id="weather">
                 <div class="row" id="today">
                     <div class="col">
-                        <div class="city"></div>
+                        <div class="city"></div><img id="wicon" src=" ">
                         <div class="temp"></div>
                         <div class="humidity"></div>
                         <div class="wind"></div>
@@ -57,40 +57,50 @@
                         <div class="row">
                             <!--each card will have Date, Icon representation, Temperature, Humidity-->
                             <div class="col">
-                                <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                <div class="card text-white bg-primary mb-3" style="max-width: 8rem;">
                                     <div class="card-body">
+                                        <h6 id="d1"></h5>
+                                        <img id="w1" src=" ">
                                         <p id="t1"></p>
                                         <p id="h1"></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                <div class="card text-white bg-primary mb-3" style="max-width: 8rem;">
                                     <div class="card-body">
+                                        <h6 id="d2"></h5>
+                                        <img id="w2" src=" ">
                                         <p id="t2"></p>
                                         <p id="h2"></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                <div class="card text-white bg-primary mb-3" style="max-width: 8rem;">
                                     <div class="card-body">
+                                        <h6 id="d3"></h5>
+                                        <img id="w3" src=" ">
                                         <p id="t3"></p>
                                         <p id="h3"></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                <div class="card text-white bg-primary mb-3" style="max-width: 8rem;">
                                     <div class="card-body">
+                                        <h6 id="d4"></h5>
+                                        <img id="w4" src=" ">
                                         <p id="t4"></p>
                                         <p id="h4"></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                <div class="card text-white bg-primary mb-3" style="max-width: 8rem;">
                                     <div class="card-body">
+                                        <h6 id="d5"></h5>
+                                        <img id="w5" src=" ">
                                         <p id="t5"></p>
                                         <p id="h5"></p>
                                     </div>
@@ -103,6 +113,7 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script type="text/javascript">
     //1. Search for a city
         //Use Activity 9!
@@ -116,9 +127,7 @@
 
         // Function for dumping the JSON content for each button into the div
         function displayCityInfo() {
-            //var city = $(this).attr("data-name");
             var citySearchURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
-            //var weatherIconURL = "http://openweathermap.org/img/wn/" + 10d + "@2x.png";
 
             $.ajax({
                 url: citySearchURL,
@@ -132,9 +141,13 @@
                     uvDataResponse = responseUvi;
                     // Temperature IN FARENHEIT
                     var tempF = (uvDataResponse.current.temp - 273.15) * 1.80 + 32;
+                    var date = moment.unix(uvDataResponse.current.dt).format("MM/DD/YYYY");
+                    var iconImg = uvDataResponse.current.weather[0].icon;
+                    var iconURL = "http://openweathermap.org/img/wn/" + iconImg + "@2x.png";
            
                     //Transfering content to HTMl
-                    $(".city").html("<h3>" + uvDataResponse.timezone + " (Also need date and icon)");
+                    $(".city").html("<h3>" + uvDataResponse.timezone + " " + date);
+                    $("#wicon").attr("src", iconURL);
                     $(".temp").text("Temperature(F): " + tempF);
                     $(".humidity").text("Humidity: " + uvDataResponse.current.humidity + "%");
                     $(".wind").text("Wind Speed: " + uvDataResponse.current.wind_speed + " MPH");
@@ -148,21 +161,32 @@
                     method: "GET"
                 }).then(function(forecastResponse) {
                     var results = forecastResponse.list;
+
                     for (var i = 0; i < results.length; i) {
-                        $("#t1").html("Temperature: " + results[0].main.temp);
-                        $("#h1").html("Humidity: " + results[0].main.humidity);
+                        $("#d1").html(moment.unix(results[6].dt).format("MM/DD/YYYY"));
+                        $("#w1").attr("src", "http://openweathermap.org/img/wn/" + results[6].weather[0].icon + "@2x.png");
+                        $("#t1").html("Temp(K): " + results[6].main.temp);
+                        $("#h1").html("Humidity: " + results[6].main.humidity + "%");
+                        
+                        $("#d2").html(moment.unix(results[14].dt).format("MM/DD/YYYY"));
+                        $("#w2").attr("src", "http://openweathermap.org/img/wn/" + results[14].weather[0].icon + "@2x.png");
+                        $("#t2").html("Temp(K): " + results[14].main.temp);
+                        $("#h2").html("Humidity: " + results[14].main.humidity + "%");
+                        
+                        $("#d3").html(moment.unix(results[22].dt).format("MM/DD/YYYY"));
+                        $("#w3").attr("src", "http://openweathermap.org/img/wn/" + results[22].weather[0].icon + "@2x.png");
+                        $("#t3").html("Temp(K): " + results[22].main.temp);
+                        $("#h3").html("Humidity: " + results[22].main.humidity + "%");
 
-                        $("#t2").html("Temperature: " + results[1].main.temp);
-                        $("#h2").html("Humidity: " + results[1].main.humidity);
+                        $("#d4").html(moment.unix(results[31].dt).format("MM/DD/YYYY"));
+                        $("#w4").attr("src", "http://openweathermap.org/img/wn/" + results[31].weather[0].icon + "@2x.png");
+                        $("#t4").html("Temp(K): " + results[31].main.temp);
+                        $("#h4").html("Humidity: " + results[31].main.humidity + "%");
 
-                        $("#t3").html("Temperature: " + results[2].main.temp);
-                        $("#h3").html("Humidity: " + results[2].main.humidity);
-
-                        $("#t4").html("Temperature: " + results[3].main.temp);
-                        $("#h4").html("Humidity: " + results[3].main.humidity);
-
-                        $("#t5").html("Temperature: " + results[4].main.temp);
-                        $("#h5").html("Humidity: " + results[4].main.humidity);
+                        $("#d5").html(moment.unix(results[36].dt).format("MM/DD/YYYY"));
+                        $("#w5").attr("src", "http://openweathermap.org/img/wn/" + results[36].weather[0].icon + "@2x.png");
+                        $("#t5").html("Temp(K): " + results[36].main.temp);
+                        $("#h5").html("Humidity: " + results[36].main.humidity + "%");
                         i++;
                         if (i == 1){
                             break;
@@ -177,29 +201,6 @@
            
         }
 
-        // Function for displaying movie data
-        function renderButtons() {
-            // Deleting the buttons prior to adding new movies
-            // (this is necessary otherwise you will have repeat buttons)
-            $("#buttons-view").empty();
-
-            // Looping through the array of movies
-            for (var i = 0; i < movies.length; i++) {
-
-                // Then dynamically generating buttons for each movie in the array
-                // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
-                var a = $("<button>");
-                // Adding a class of movie to our button
-                a.addClass("movie");
-                // Adding a data-attribute
-                a.attr("data-name", movies[i]);
-                // Providing the initial button text
-                a.text(movies[i]);
-                // Adding the button to the buttons-view div
-                $("#buttons-view").append(a);
-            }
-        }
-
         // This function handles events where one button is clicked
         $("#add-city").on("click", function(event) {
             event.preventDefault();
@@ -207,12 +208,6 @@
             // This line grabs the input from the textbox
             city = $("#city-input").val().trim();
 
-            // Adding the movie from the textbox to our array
-               // movies.push(movie);
-               // console.log(movies);
-
-            // Calling renderButtons which handles the processing of our movie array
-                    //renderButtons();
         });
 
         // Function for displaying the movie info
