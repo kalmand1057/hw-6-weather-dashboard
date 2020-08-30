@@ -31,7 +31,7 @@
             <!--Can click on city in search history-->
             <!--When clicked, can AGAIN pull up Today's Forecast and 5 Day Forecast from search history-->
             <!--Have search history persist. Make sure that when you close out, once you pull it back up the search history stays-->
-            <div class="col-3" id="search">
+            <div class="col-2" id="search">
                 <h3>Search for a City</h3>
                 <form id="city-form">
                     <label for="city-input"></label>
@@ -41,7 +41,7 @@
                 </form>
             </div>
             <!--main-->
-            <main class="col-9" id="weather">
+            <main class="col-10" id="weather">
                 <div class="row" id="today">
                     <div class="col">
                         <div class="city"></div>
@@ -56,11 +56,46 @@
                         <div class="row"><h3>5 Day Forecast</h3></div>
                         <div class="row">
                             <!--each card will have Date, Icon representation, Temperature, Humidity-->
-                            <div class="col border border-dark" id="0">col</div>
-                            <div class="col border border-dark" id="1">col</div>
-                            <div class="col border border-dark" id="2">col</div>
-                            <div class="col border border-dark" id="3">col</div>
-                            <div class="col border border-dark" id="4">col</div>
+                            <div class="col">
+                                <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                    <div class="card-body">
+                                        <p id="t1"></p>
+                                        <p id="h1"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                    <div class="card-body">
+                                        <p id="t2"></p>
+                                        <p id="h2"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                    <div class="card-body">
+                                        <p id="t3"></p>
+                                        <p id="h3"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                    <div class="card-body">
+                                        <p id="t4"></p>
+                                        <p id="h4"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+                                    <div class="card-body">
+                                        <p id="t5"></p>
+                                        <p id="h5"></p>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                     </div>
                 </div>
@@ -114,9 +149,22 @@
                 }).then(function(forecastResponse) {
                     var results = forecastResponse.list;
                     for (var i = 0; i < results.length; i) {
-                        console.log(results[i].main.humidity);
+                        $("#t1").html("Temperature: " + results[0].main.temp);
+                        $("#h1").html("Humidity: " + results[0].main.humidity);
+
+                        $("#t2").html("Temperature: " + results[1].main.temp);
+                        $("#h2").html("Humidity: " + results[1].main.humidity);
+
+                        $("#t3").html("Temperature: " + results[2].main.temp);
+                        $("#h3").html("Humidity: " + results[2].main.humidity);
+
+                        $("#t4").html("Temperature: " + results[3].main.temp);
+                        $("#h4").html("Humidity: " + results[3].main.humidity);
+
+                        $("#t5").html("Temperature: " + results[4].main.temp);
+                        $("#h5").html("Humidity: " + results[4].main.humidity);
                         i++;
-                        if (i == 5){
+                        if (i == 1){
                             break;
                         }
                     }
